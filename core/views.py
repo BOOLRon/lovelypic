@@ -6,6 +6,8 @@ from django.views.generic import View, TemplateView
 
 import flickrapi
 
+from secret import passwords
+
 import logging
 logging.basicConfig()
 
@@ -27,7 +29,7 @@ def require_flickr_auth(view):
             token = None
             log.info('No token in session')
 
-        f = flickrapi.FlickrAPI(settings.FLICKR_API_KEY,settings.FLICKR_API_SECRET,token=token,store_token=False)
+        f = flickrapi.FlickrAPI(passwords.FLICKR_API_KEY,passwords.FLICKR_API_SECRET,token=token,store_token=False)
 
         if token:
             # We have a token, but it might not be valid
@@ -54,7 +56,7 @@ def require_flickr_auth(view):
 def callback(request):
     log.info('We got a callback from Flickr, store the token')
 
-    f = flickrapi.FlickrAPI(settings.FLICKR_API_KEY,settings.FLICKR_API_SECRET, store_token=False)
+    f = flickrapi.FlickrAPI(passwords.FLICKR_API_KEY,passwords.FLICKR_API_SECRET, store_token=False)
 
     frob = request.GET['frob']
     token = f.get_token(frob)
