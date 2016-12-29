@@ -90,3 +90,8 @@ ENV/
 # Rope project settings
 .ropeproject
 
+
+# Password files
+passwords.py
+
+.idea/
