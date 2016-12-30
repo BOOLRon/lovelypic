@@ -17,15 +17,10 @@ from django.conf import settings
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf.urls.static import static
-from core.views import SampleView, AngularApp, NgTemplateView
-
-ngurls = [
-    url(r'^$', SampleView.as_view(), name='sample'),
-    url(r'^ng/$', NgTemplateView.as_view(), name='ngTemplate'),
-]
+from core.views import AngularApp, NgTemplateView, Search, Photos
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^sample/', include(ngurls)),
-    url(r'^(?!ng/).*$', AngularApp.as_view(), name="angular_app"),
+    url(r'^search/', Search.as_view(), name="Search"),
+    url(r'^photos/', Photos.as_view(), name="Photos"),
 ] + static(settings.ANGULAR_URL, document_root=settings.ANGULAR_ROOT)
