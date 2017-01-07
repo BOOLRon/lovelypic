@@ -17,10 +17,12 @@ from django.conf import settings
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf.urls.static import static
-from core.views import AngularApp, NgTemplateView, Search, Photos
+from core.views import AngularApp, NgTemplateView, Search, Photos, Login, authUser
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^auth/$', authUser),
+    url(r'^login/$', Login.as_view(), name="Login"),
     url(r'^search/', Search.as_view(), name="Search"),
     url(r'^photos/', Photos.as_view(), name="Photos"),
 ] + static(settings.ANGULAR_URL, document_root=settings.ANGULAR_ROOT)

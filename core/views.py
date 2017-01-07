@@ -4,11 +4,25 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import View, TemplateView
 from core.models import Photo
+from django.contrib.auth import authenticate
 
 import logging
 logging.basicConfig()
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
+
+def authUser(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    user = authenticate(username=username, password=password)
+    if user:
+        return HttpResponse('login success')
+    else:
+        return HttpResponse('login fail')
+
+class Login(View):
+    def get(self, request):
+        return render(request, 'login.html')
 
 class AngularApp(TemplateView):
     template_name = 'index.html'
