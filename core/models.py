@@ -1,8 +1,52 @@
 from django.db import models
 
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 from enum import Enum, unique
 from secret import passwords
 import urllib.request
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    avatar = models.CharField(max_length=30, blank=True)
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
+
+class Photodb(models.Model):
+    photo_from = models.CharField(max_length=20, blank=True)
+    take_by_userid = models.ForeignKey('auth.User', on_delete=models.DO_NOTHING)
+    name = models.CharField(max_length=30, blank=True)
+    image_url = models.CharField(max_length=100, blank=True)
+    link = models.CharField(max_length=100, blank=True)
+    aspect = models.FloatField()
+
+class Photoext(models.Model):
+    photoid = models.ForeignKey('Photodb', on_delete=models.CASCADE)
+    camera = models.CharField(max_length=100, blank=True)
+    lens = models.CharField(max_length=100, blank=True)
+    focal_length = models.CharField(max_length=10, blank=True)
+    iso = models.CharField(max_length=10, blank=True)
+    shutter_speed = models.CharField(max_length=10, blank=True)
+    aperture = models.CharField(max_length=10, blank=True)
+    latitude = models.FloatField()
+    location = models.FloatField()
+    taken_at = models.CharField(max_length=100, blank=True)
+    width = models.FloatField()
+    height = models.FloatField()
+
+class Photofavorite(models.Model):
+    photoid = models.ForeignKey('Photodb', on_delete=models.CASCADE)
+    userid = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+
 
 @unique
 class PhotoFeature(Enum):
