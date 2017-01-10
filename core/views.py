@@ -5,6 +5,10 @@ from django.shortcuts import render, redirect
 from django.views.generic import View, TemplateView
 from core.models import Photo
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
+from django.template import RequestContext
+from django.views.decorators.csrf import csrf_exempt
+
 
 import logging
 logging.basicConfig()
@@ -20,9 +24,22 @@ def authUser(request):
     else:
         return HttpResponse('login fail')
 
+@csrf_exempt
+def registerUser(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    email = request.POST['email']
+    count_of_user = len(User.objects.filter(username=username))
+    if count_of_user > 0:
+        return HttpResponse('Account has been register')
+    else:
+        newUser = User.objects.create_user(username, email, password)
+        newUser.save()
+        return render(request, 'login_register.html')
+
 class Login(View):
     def get(self, request):
-        return render(request, 'login.html')
+        return render(request, 'login_register.html')
 
 class AngularApp(TemplateView):
     template_name = 'index.html'
