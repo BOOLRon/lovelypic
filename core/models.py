@@ -29,6 +29,7 @@ class Photodb(models.Model):
     link = models.CharField(max_length=100, blank=True)
     aspect = models.FloatField()
     photoext = models.OneToOneField('Photoext', on_delete=models.CASCADE, blank=True)
+    category = models.CharField(max_length=20, blank=True)
 
 class Photoext(models.Model):
     camera = models.CharField(max_length=100, blank=True)
