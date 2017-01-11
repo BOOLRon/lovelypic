@@ -31,6 +31,23 @@ class Photodb(models.Model):
     photoext = models.OneToOneField('Photoext', on_delete=models.CASCADE, blank=True)
     category = models.CharField(max_length=20, blank=True)
 
+    @classmethod
+    def createByJSONObj(JSONObj,category):
+        url = JSONObj['url']
+        if url:
+            newPhoto = Photodb(link=url)
+            newPhoto.photo_from = '500px'
+            newPhoto.name = JSONObj['name']
+            newPhoto.image_url = JSONObj['image_url']
+            width = float(JSONObj['width'])
+            height = float(JSONObj['height'])
+            newPhoto.photoext = Photoext.createByJSONObj(JSONObj)
+            if width > 0 and height > 0:
+                newPhoto.aspect = width/height
+            newPhoto.category = category
+            return newPhoto
+        return None
+
 class Photoext(models.Model):
     camera = models.CharField(max_length=100, blank=True)
     lens = models.CharField(max_length=100, blank=True)
@@ -43,6 +60,24 @@ class Photoext(models.Model):
     taken_at = models.CharField(max_length=100, blank=True)
     width = models.FloatField()
     height = models.FloatField()
+
+    @classmethod
+    def createByJSONObj(JSONObj):
+        photoExtObj = Photoext()
+        photoExtObj.camera = JSONObj['camera']
+        photoExtObj.lens = JSONObj['lens']
+        photoExtObj.focal_length = JSONObj['focal_length']
+        photoExtObj.iso = JSONObj['iso']
+        photoExtObj.shutter_speed = JSONObj['shutter_speed']
+        photoExtObj.aperture = JSONObj['aperture']
+        photoExtObj.latitude = float(JSONObj['latitude'])
+        photoExtObj.location = float(JSONObj['location'])
+        photoExtObj.taken_at = JSONObj['taken_at']
+        photoExtObj.width = float(JSONObj['width'])
+        photoExtObj.height = float(JSONObj['height'])
+        return photoExtObj
+
+
 
 class Photofavorite(models.Model):
     photoid = models.ForeignKey('Photodb', on_delete=models.CASCADE)
