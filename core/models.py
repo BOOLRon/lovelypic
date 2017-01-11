@@ -28,9 +28,9 @@ class Photodb(models.Model):
     image_url = models.CharField(max_length=100, blank=True)
     link = models.CharField(max_length=100, blank=True)
     aspect = models.FloatField()
+    photoext = models.OneToOneField('Photoext', on_delete=models.CASCADE, blank=True)
 
 class Photoext(models.Model):
-    photoid = models.ForeignKey('Photodb', on_delete=models.CASCADE)
     camera = models.CharField(max_length=100, blank=True)
     lens = models.CharField(max_length=100, blank=True)
     focal_length = models.CharField(max_length=10, blank=True)
