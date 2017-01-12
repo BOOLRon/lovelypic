@@ -27,7 +27,7 @@ class Photodb(models.Model):
     name = models.CharField(max_length=30, blank=True)
     image_url = models.CharField(max_length=100, blank=True)
     link = models.CharField(max_length=100, blank=True)
-    aspect = models.FloatField()
+    aspect = models.FloatField(blank=True)
     photoext = models.OneToOneField('Photoext', on_delete=models.CASCADE, blank=True)
     category = models.CharField(max_length=20, blank=True)
 
@@ -55,11 +55,11 @@ class Photoext(models.Model):
     iso = models.CharField(max_length=10, blank=True)
     shutter_speed = models.CharField(max_length=10, blank=True)
     aperture = models.CharField(max_length=10, blank=True)
-    latitude = models.FloatField()
-    location = models.FloatField()
+    latitude = models.FloatField(blank=True)
+    longitude = models.FloatField(blank=True)
     taken_at = models.CharField(max_length=100, blank=True)
-    width = models.FloatField()
-    height = models.FloatField()
+    width = models.FloatField(blank=True)
+    height = models.FloatField(blank=True)
 
     @classmethod
     def createByJSONObj(JSONObj):
@@ -71,7 +71,7 @@ class Photoext(models.Model):
         photoExtObj.shutter_speed = JSONObj['shutter_speed']
         photoExtObj.aperture = JSONObj['aperture']
         photoExtObj.latitude = float(JSONObj['latitude'])
-        photoExtObj.location = float(JSONObj['location'])
+        photoExtObj.longitude = float(JSONObj['longitude'])
         photoExtObj.taken_at = JSONObj['taken_at']
         photoExtObj.width = float(JSONObj['width'])
         photoExtObj.height = float(JSONObj['height'])
