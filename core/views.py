@@ -75,7 +75,9 @@ def requestThenStoreByURL(url,keyword):
         findPhotoSet = Photodb.objects.filter(link=photo['url'])
         if len(findPhotoSet) == 0:
             newPhoto = Photodb.createByJSONObj(photo,keyword)
-            newPhoto.save()
+            log.info(newPhoto)
+            if newPhoto:
+                newPhoto.save()
 
 def requestDatabaseByType(photoFeature):
     photoSet = Photodb.objects.filter(category=photoFeature)
