@@ -17,12 +17,14 @@ from django.conf import settings
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf.urls.static import static
-from core.views import AngularApp, NgTemplateView, Login, authUser, registerUser, requestPhotos
+from core.views import AngularApp, NgTemplateView, Login, authUser, registerUser, requestPhotos, Search, searchword
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^registeruser/$', registerUser),
     url(r'^requestphotos/$', requestPhotos),
+    url(r'^searchword/$', searchword),
+    url(r'^search/$', Search.as_view(), name="Search"),
     url(r'^auth/$', authUser),
     url(r'^login/$', Login.as_view(), name="Login"),
 ] + static(settings.ANGULAR_URL, document_root=settings.ANGULAR_ROOT)

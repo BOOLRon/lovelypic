@@ -116,9 +116,20 @@ def JSONStringFromURL(url):
     responseText = data.decode('utf-8')
     return responseText
 
+def searchword(request):
+    searchword = request.POST['searchword']
+    if searchword:
+        return requestThenStorePhotosBySearch(searchword)
+    else:
+        HttpResponse('search faile')
+
 class Login(View):
     def get(self, request):
         return render(request, 'login_register.html')
+
+class Search(View):
+    def get(self, request):
+        return render(request, 'search.html')
 
 class AngularApp(TemplateView):
     template_name = 'index.html'

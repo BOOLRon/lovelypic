@@ -1,0 +1,22 @@
+{% load static %}
+
+<html>
+<head>
+    <title>Search Photo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/search.css' %}">
+</head>
+
+<body>
+
+<form class="form-wrapper" method="post" action="/searchword/" >{% csrf_token %}
+    <input type="text" id="search" name="searchword" placeholder="Search for..." required>
+    <input type="submit" value="go" id="submit">
+</form>
+
+</body>
+
+</html>
+
+
