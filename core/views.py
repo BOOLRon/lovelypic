@@ -59,6 +59,7 @@ def requestThenStorePhotosByType(photoFeature):
     if shouldRequestURL(photoFeature):
         # need to requeset then store
         requestThenStoreByURL(url,photoFeature)
+    log.info('hei requestThenStore')
     return requestDatabaseByType(photoFeature)
 
 def requestThenStorePhotosBySearch(searchWord):

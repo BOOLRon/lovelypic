@@ -45,10 +45,6 @@ class Photodb(models.Model):
             photoext = Photoext.createByJSONObj(JSONObj)
             photoext.save()
             newPhoto.photoext = photoext
-            log.info(width)
-            log.info(height)
-            log.info('can you see')
-            log.info(width/height)
             if width > 0 and height > 0:
                 newPhoto.aspect = width/height
             else:
@@ -81,11 +77,6 @@ class Photoext(models.Model):
         photoExtObj.aperture = JSONObj['aperture']
         latitude = JSONObj['latitude']
         longitude = JSONObj['longitude']
-
-        log.info(JSONObj)
-        log.info(latitude)
-        log.info(longitude)
-
         if latitude:
             photoExtObj.latitude = float(latitude)
         if longitude:
