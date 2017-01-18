@@ -30,6 +30,7 @@ class Photodb(models.Model):
     aspect = models.FloatField(blank=True, null=True)
     photoext = models.OneToOneField('Photoext', on_delete=models.CASCADE, blank=True, null=True)
     category = models.CharField(max_length=20, blank=True)
+    originLink = models.CharField(max_length=100, blank=True)
 
     @classmethod
     def createByJSONObj(cls,JSONObj,category):
@@ -37,6 +38,7 @@ class Photodb(models.Model):
         if url:
             newPhoto = Photodb.objects.create()
             newPhoto.link = url
+            newPhoto.originLink = 'https://500px.com' + url
             newPhoto.photo_from = '500px'
             newPhoto.name = JSONObj['name']
             newPhoto.image_url = JSONObj['image_url']

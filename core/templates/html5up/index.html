@@ -8,7 +8,7 @@
 -->
 <html>
 	<head>
-		<title>Multiverse by HTML5 UP</title>
+		<title>Lovely Photo</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
@@ -37,7 +37,7 @@
 				<div id="main">
 					{% for photo in photos %}
 						<article class="thumb">
-								<a href="#" class="image"><img src="{{ photo.image_url }}" alt="" /></a>
+								<a href="{{ photo.image_url }}" class="image"><img src="{{ photo.image_url }}" alt="" /></a>
 								<h2>{{ photo.name }}</h2>
 								<p>{{ photo.description }}</p>
 							</article>
