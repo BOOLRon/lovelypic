@@ -82,7 +82,7 @@ def requestThenStoreByURL(url,keyword):
 
 def requestDatabaseByType(photoFeature):
     photoSet = Photodb.objects.filter(category=photoFeature)
-    return HttpResponse(photoSet)
+    return photoSet
 
 def requestDatabaseBySearch(searchWord):
     photoSet = Photodb.objects.filter(category=searchWord)
@@ -126,6 +126,13 @@ def searchword(request):
 class Login(View):
     def get(self, request):
         return render(request, 'login_register.html')
+
+class Photo(View):
+    def get(self, request):
+        photos = requestPhotos(request)
+        context = {'photos' : photos}
+        log.info(context)
+        return render(request, 'html5up/index.html', context)
 
 class Search(View):
     def get(self, request):
