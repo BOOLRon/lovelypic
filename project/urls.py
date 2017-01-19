@@ -17,10 +17,11 @@ from django.conf import settings
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf.urls.static import static
-from core.views import AngularApp, NgTemplateView, Login, authUser, registerUser, requestPhotos, Search, searchword, Photo
+from core.views import AngularApp, NgTemplateView, Login, authUser, registerUser, requestPhotos, Search, searchword, Photo, logoutRequest
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^logout/', logoutRequest),
     url(r'^registeruser/$', registerUser),
     url(r'^photos/(?P<photo_type>[\w]+)/$', Photo.as_view(), name='Photo'),
     url(r'^photos/$', Photo.as_view(),name='Photo'),

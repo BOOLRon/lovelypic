@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import View, TemplateView
 from core.models import Photodb
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
@@ -28,7 +28,9 @@ def authUser(request):
     password = request.POST['password']
     user = authenticate(username=username, password=password)
     if user:
-        return HttpResponse('login success')
+        log.info(user)
+        login(request,user)
+        return redirect('/photos/')
     else:
         return HttpResponse('login fail')
 
@@ -123,6 +125,10 @@ def searchword(request):
     else:
         HttpResponse('search faile')
 
+def logoutRequest(request):
+    logout(request)
+    return redirect('/photos/')
+
 class Login(View):
     def get(self, request):
         return render(request, 'login_register.html')
@@ -133,6 +139,8 @@ class Photo(View):
             photo_type = 'popular'
         photos = requestPhotos({'photoFeature' : photo_type})
         context = {'photos' : photos, 'photo_type' : photo_type}
+        if request.user.is_authenticated:
+            context['authuser'] = request.user
         log.info(context)
         return render(request, 'html5up/index.html', context)
 
