@@ -45,7 +45,8 @@ def registerUser(request):
     else:
         newUser = User.objects.create_user(username, email, password)
         newUser.save()
-        return render(request, 'login_register.html')
+        login(request,newUser)
+        return redirect('/photos/')
 
 def requestPhotos(context):
     if 'photoFeature' in context:
@@ -128,10 +129,6 @@ def searchword(request):
 def logoutRequest(request):
     logout(request)
     return redirect('/photos/')
-
-class Login(View):
-    def get(self, request):
-        return render(request, 'login_register.html')
 
 class Photo(View):
     def get(self, request, photo_type = None):

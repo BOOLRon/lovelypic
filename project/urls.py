@@ -17,7 +17,7 @@ from django.conf import settings
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf.urls.static import static
-from core.views import AngularApp, NgTemplateView, Login, authUser, registerUser, requestPhotos, Search, searchword, Photo, logoutRequest
+from core.views import AngularApp, NgTemplateView, authUser, registerUser, requestPhotos, Search, searchword, Photo, logoutRequest
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -25,8 +25,7 @@ urlpatterns = [
     url(r'^registeruser/$', registerUser),
     url(r'^photos/(?P<photo_type>[\w]+)/$', Photo.as_view(), name='Photo'),
     url(r'^photos/$', Photo.as_view(),name='Photo'),
-    url(r'^searchword/$', searchword),
-    url(r'^search/$', Search.as_view(), name="Search"),
+    # url(r'^searchword/$', searchword),
+    # url(r'^search/$', Search.as_view(), name="Search"),
     url(r'^auth/$', authUser),
-    url(r'^login/$', Login.as_view(), name="Login"),
 ] + static(settings.ANGULAR_URL, document_root=settings.ANGULAR_ROOT)
