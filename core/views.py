@@ -45,14 +45,14 @@ def registerUser(request):
         newUser.save()
         return render(request, 'login_register.html')
 
-def requestPhotos(request):
-    # photoFeature = request.POST['photoFeature']
-    # searchWord = request.POST['search']
-    photoFeature = 'popular'
-    if photoFeature:
-        return requestThenStorePhotosByType(photoFeature)
+def requestPhotos(context):
+    if 'photoFeature' in context:
+        return requestThenStorePhotosByType(context['photoFeature'])
     else:
-        return requestThenStorePhotosBySearch(searchWord)
+        if 'search' in context:
+            return requestThenStorePhotosBySearch(context['search'])
+        else:
+            return requestThenStorePhotosByType('popular')
 
 def requestThenStorePhotosByType(photoFeature):
     url = photoFeatureURL(photoFeature)
@@ -128,9 +128,11 @@ class Login(View):
         return render(request, 'login_register.html')
 
 class Photo(View):
-    def get(self, request):
-        photos = requestPhotos(request)
-        context = {'photos' : photos}
+    def get(self, request, photo_type = None):
+        if photo_type == None:
+            photo_type = 'popular'
+        photos = requestPhotos({'photoFeature' : photo_type})
+        context = {'photos' : photos, 'photo_type' : photo_type}
         log.info(context)
         return render(request, 'html5up/index.html', context)
 

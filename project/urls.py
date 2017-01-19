@@ -22,7 +22,8 @@ from core.views import AngularApp, NgTemplateView, Login, authUser, registerUser
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^registeruser/$', registerUser),
-    url(r'^requestphotos/$', Photo.as_view(), name="Photo"),
+    url(r'^photos/(?P<photo_type>[\w]+)/$', Photo.as_view(), name='Photo'),
+    url(r'^photos/$', Photo.as_view(),name='Photo'),
     url(r'^searchword/$', searchword),
     url(r'^search/$', Search.as_view(), name="Search"),
     url(r'^auth/$', authUser),
