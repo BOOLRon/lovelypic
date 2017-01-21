@@ -3,7 +3,7 @@ from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import View, TemplateView
-from core.models import Photodb
+from core.models import Photodb, Photofavorite
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.template import RequestContext
@@ -28,7 +28,6 @@ def authUser(request):
     password = request.POST['password']
     user = authenticate(username=username, password=password)
     if user:
-        log.info(user)
         login(request,user)
         return redirect('/photos/')
     else:
@@ -48,6 +47,7 @@ def registerUser(request):
         login(request,newUser)
         return redirect('/photos/')
 
+
 def requestPhotos(context):
     if 'photoFeature' in context:
         return requestThenStorePhotosByType(context['photoFeature'])
@@ -57,12 +57,34 @@ def requestPhotos(context):
         else:
             return requestThenStorePhotosByType('popular')
 
+def requestFavoritePhotos(request):
+    if request.user.is_authenticated:
+        userid = request.user.id
+        if userid != None:
+            photoFavorites = Photofavorite.objects.filter(userid=userid)
+            allFavoritePhotos = []
+            for photoFavorite in photoFavorites:
+                photoSet = Photodb.objects.filter(id=photoFavorite.photoid)
+                if len(photoSet) > 0:
+                    allFavoritePhotos.append(photoSet[0])
+            if len(allFavoritePhotos)>0:
+                return allFavoritePhotos
+    return []
+
+def favoriteAction(request):
+    photo_id = request.GET.get('photo_id')
+    log.info('hey')
+    log.info(photo_id)
+    if request.user.is_authenticated:
+        return HttpResponse('TODO save into DB')
+    else:
+        return HttpResponse('not login')
+
 def requestThenStorePhotosByType(photoFeature):
     url = photoFeatureURL(photoFeature)
     if shouldRequestURL(photoFeature):
         # need to requeset then store
         requestThenStoreByURL(url,photoFeature)
-    log.info('hei requestThenStore')
     return requestDatabaseByType(photoFeature)
 
 def requestThenStorePhotosBySearch(searchWord):
@@ -79,7 +101,6 @@ def requestThenStoreByURL(url,keyword):
         findPhotoSet = Photodb.objects.filter(link=photo['url'])
         if len(findPhotoSet) == 0:
             newPhoto = Photodb.createByJSONObj(photo,keyword)
-            log.info(newPhoto)
             if newPhoto:
                 newPhoto.save()
 
@@ -113,7 +134,6 @@ def photoSearchURL(searchWord):
     return url
 
 def JSONStringFromURL(url):
-    log.info(url)
     response = urllib.request.urlopen(url)
     data = response.read()
     responseText = data.decode('utf-8')
@@ -134,11 +154,17 @@ class Photo(View):
     def get(self, request, photo_type = None):
         if photo_type == None:
             photo_type = 'popular'
-        photos = requestPhotos({'photoFeature' : photo_type})
-        context = {'photos' : photos, 'photo_type' : photo_type}
+
+        if photo_type == 'fav':
+            photos = requestFavoritePhotos(request)
+        else:
+            photos = requestPhotos({'photoFeature' : photo_type})
+
+        context = {'photo_type' : photo_type}
         if request.user.is_authenticated:
             context['authuser'] = request.user
-        log.info(context)
+        if len(photos)>0:
+            context['photos'] = photos
         return render(request, 'html5up/index.html', context)
 
 class Search(View):
@@ -151,8 +177,6 @@ class AngularApp(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(AngularApp, self).get_context_data(**kwargs)
         context['ANGULAR_URL'] = settings.ANGULAR_URL
-        log.info(context)
-        log.info('from AngularApp')
         return context
 
 # class SampleView(TemplateView):

@@ -17,6 +17,36 @@
 	    <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+
+		<script>
+
+			$(document).ready(function(){
+
+				$("#photo_thumb").click(function(){
+					var favoritePhotoId = $("#photo_favorite_photoid").val()
+					console.log('can you see me')
+					console.log(favoritePhotoId)
+
+					$.ajax({
+						url: '/favorite/',
+						type: 'get',
+						data: { 'photo_id' : favoritePhotoId },
+						success: function(data) {
+							console.log(data)
+						},
+						failure: function(data) {
+							console.log(data)
+						}
+					});
+
+				});
+
+			});
+
+
+		</script>
+
+
 	</head>
 	<body>
 
@@ -36,10 +66,11 @@
 				<div id="main">
 					{% for photo in photos %}
 						<article class="thumb">
-								<a href="{{ photo.image_url }}" class="image"><img src="{{ photo.image_url }}" alt="" /></a>
+								<a href="{{ photo.image_url }}" class="image" id="photo_thumb"><img src="{{ photo.image_url }}" alt=""/></a>
 								<h2>{{ photo.name }}</h2>
+								<input type="hidden" id="photo_favorite_photoid" value="{{ photo.id }}">
 								<p>{{ photo.description }}</p>
-							</article>
+						</article>
 					{% endfor %}
 					</div>
 				{% else %}
@@ -60,6 +91,9 @@
 										<li><a href="/photos/upcoming">Upcoming</a></li>
 										<li><a href="/photos/editors">Editors</a></li>
 										<li><a href="/photos/fresh_today">Fresh Today</a></li>
+										{% if authuser %}
+										<li><a href="/photos/fav">Favorite</a></li>
+										{% endif %}
 									</ul>
 								</nav>
 							</section>
@@ -81,8 +115,6 @@
 							<section>
 								{% if authuser %}
 								<h2>{{ authuser }}</h2>
-								<a href="#" <span class="label">收藏列表</span></a>
-								<br>
 								<a href="/logout/" <span class="label">退出</span></a>
 								{% else %}
 								<h2>Login or Register</h2>
@@ -116,7 +148,6 @@
 		<!-- Scripts -->
 		<script>
 			$('.message a').click(function(){
-				console.log('on click toggle')
 				$('form').animate({height: "toggle", opacity: "toggle"}, "slow");
 			});
 		</script>
